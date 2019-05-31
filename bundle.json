@@ -1,0 +1,66 @@
+{
+  "name": "aws-s3-terraform",
+  "version": "0.1.0",
+  "schemaVersion": "v1.0.0-WD",
+  "parameters": {
+    "region": {
+      "type": "string",
+      "defaultValue": "ca-central-1",
+      "description": "Default AWS region to use.",
+      "destination": {
+        "env": "TF_VAR_region"
+      }
+    },
+    "environment": {
+      "type": "string",
+      "defaultValue": "poc",
+      "description": "AWS environment where to create the bucket.",
+      "destination": {
+        "env": "TF_VAR_environment"
+      }
+    },
+    "backend": {
+      "type": "string",
+      "defaultValue": "true",
+      "description": "Create the backend bucket by default.",
+      "destination": {
+        "env": "TF_VAR_backend"
+      }
+    },
+    "bucket_name": {
+      "type": "string",
+      "defaultValue": "My First Bucket",
+      "description": "AWS bucket name.",
+      "destination": {
+        "env": "TF_VAR_bucket_name"
+      }
+    },
+    "bucket": {
+      "type": "string",
+      "defaultValue": "my-tf-test-bucket",
+      "description": "AWS bucket identifier to create.",
+      "destination": {
+        "env": "TF_VAR_bucket"
+      }
+    }
+  },
+  "invocationImages": [
+    {
+      "imageType": "docker",
+      "image": "cnab/terraform:latest"
+    }
+  ],
+  "credentials": {
+    "access_key_id": {
+      "env": "TF_VAR_access_key_id"
+    },
+    "secret_key_id": {
+      "env": "TF_VAR_secret_key_id"
+    }
+  },
+  "actions": {
+    "status": {
+      "modifies": true
+    }
+  }
+}

@@ -1,0 +1,40 @@
+#!/bin/bash
+set -e
+
+if [ ! -d /root/.aws ]; then
+
+  echo "INFO - Create AWS directory"
+  mkdir /root/.aws
+
+  echo "INFO - Configure AWS Credentials"
+  cat << EOF > /root/.aws/credentials
+[default]
+aws_access_key_id = ${TF_VAR_access_key_id}
+aws_secret_access_key = ${TF_VAR_secret_key_id}
+EOF
+
+  echo "INFO - Configure AWS Credentials"
+  cat << EOF > /root/.aws/config
+[default]
+region = ${TF_VAR_region}
+EOF
+
+fi
+
+if ! aws s3 ls s3://terraform-aws-s3-backend &> /dev/null; then
+
+  echo "INFO - Create S3 bucket"
+  aws s3 mb s3://terraform-aws-s3-backend
+
+fi
+
+echo "INFO - Configure Terraform backend"
+cat << EOF > /cnab/app/tf/backend.tf
+terraform {
+  backend "s3" {
+    bucket = "terraform-aws-s3-backend"
+    key    = "cnab/terraform-aws-s3-backend"
+    region = "${TF_VAR_region}"
+  }
+}
+EOF
